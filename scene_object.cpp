@@ -26,7 +26,25 @@ bool UnitSquare::intersect( Ray3D& ray, const Matrix4x4& worldToModel,
 	// HINT: Remember to first transform the ray into object space  
 	// to simplify the intersection test.
 
-	return false;
+	//Transform ray to object space
+        Ray3D rayObjectSpace = Ray3D(worldToModel * ray.origin, worldToModel * ray.dir);      
+        //point = ray.origin + t_value * ray.origin
+        //point for unitsquare is (0, 0, 0)
+        double t_value = -rayObjectSpace.origin[2] / rayObjectSpace.dir[2];
+
+        Point3D intersectionPoint = rayObjectModel.point_at(t_value);
+        bool intersection = false;
+        
+        if(ray.intersection.none || t_value < ray.intersection.t_value){
+                intersection = true
+                ray.intersection = newIntersection;
+                ray.intersection.point = modelToWorld * intersectionPoint;
+                ray.intersection.normal = worldToModel.tranpose()*Vector3D(0, 0, 1);
+                ray.intersection.none = false;
+                ray.intersection.t_value = t_value;
+        }
+        return intersection;
+	
 }
 
 bool UnitSphere::intersect( Ray3D& ray, const Matrix4x4& worldToModel,
